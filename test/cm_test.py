@@ -2,7 +2,7 @@ from appium import webdriver
 import unittest
 import time
 import os
-from pytest_testconfig import config
+import yaml
 
 timeout = 30
 poll = 2
@@ -12,6 +12,8 @@ class IAppium(unittest.TestCase):
 
     def setUp(self):
         desired_caps = {}
+        open_file = open("/Users/yaoyingdong/hogwarts_test/iAppium_python/iAppium_python.yaml",encoding='utf-8')
+        config = yaml.load(open_file)
         appium_server_url = config['appium_server_url']
         desired_caps['platformName'] = config['desired_caps']['platformName']
         desired_caps['udid'] = config['desired_caps']['udid']
@@ -22,7 +24,7 @@ class IAppium(unittest.TestCase):
         desired_caps['noReset'] = config['desired_caps']['noReset']
         desired_caps['app'] = f'{os.path.abspath(os.curdir)}/app/ContactManager.apk'
 
-        self.driver = webdriver.Remote(appium_server_url, desired_caps)
+        self.driver = webdriver.Remote(appium_server_url, config["desired_caps"])
 
     def tearDown(self):
         self.driver.quit()
